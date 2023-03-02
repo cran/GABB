@@ -21,14 +21,18 @@ PCA_RDA_graphics(
   Segment.line.type,
   Segment.line.size,
   Ellipse.IC.95,
-  Ellipse.Fac.1,
-  Ellipse.Fac.2,
-  Ellipse.Fac.3,
+  Barycenter.Ellipse.Fac1,
+  Barycenter.Ellipse.Fac2,
+  Barycenter.Ellipse.Fac3,
   factor.colors,
+  color.palette,
   factor.shapes,
   factor.sizes,
+  factor.col.border.ellipse,
+  ellipse.line.type,
   Var.circle,
   Var.circle.size,
+  Var.selected,
   Var.label.size,
   Overlaying.graphs,
   width.PCA.ind.graph,
@@ -38,11 +42,14 @@ PCA_RDA_graphics(
   var.parameter.heat.map,
   Dims.heat.map,
   Display.cell.values.heat.map,
+  width.cell.heat.map,
+  height.cell.heat.map,
   Cluster.col.heat.map,
   Cluster.row.heat.map,
   RDA.object,
   RDA.table.graph,
-  RDA.table.graph.height
+  RDA.table.graph.height,
+  Size.RDA.table.graph
 )
 }
 \arguments{
@@ -58,7 +65,7 @@ PCA_RDA_graphics(
 
 \item{Dim.b}{Numeric value (1 ; 2 ...) of the first PCA dimension selected for graphic outputs.}
 
-\item{Barycenter}{TRUE or FALSE. TRUE : Calculate and Display the barycenter of individuals for Ellipse.Fac.1 and/or .2 and/or .3.}
+\item{Barycenter}{TRUE or FALSE. TRUE : Calculate and Display the barycenter of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.}
 
 \item{Segments}{TRUE or FALSE. TRUE : Display the linking segments between individuals and barycenters.}
 
@@ -70,23 +77,31 @@ PCA_RDA_graphics(
 
 \item{Segment.line.size}{Numeric. Minimum size of segment lines. Ignore if Segments = FALSE}
 
-\item{Ellipse.IC.95}{TRUE or FALSE. TRUE : Calculate and Display the Ellipse (95\% mean confidence intervals) of individuals for Ellipse.Fac.1 and/or .2 and/or .3.}
+\item{Ellipse.IC.95}{TRUE or FALSE. TRUE : Calculate and Display the Ellipse (95\% mean confidence intervals) of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.}
 
-\item{Ellipse.Fac.1}{Character. Name of 1st factor/data frame column for Barycenter / Ellipses calculation.}
+\item{Barycenter.Ellipse.Fac1}{Character. Name of 1st factor/data frame column for Barycenter / Ellipses calculation.}
 
-\item{Ellipse.Fac.2}{Character. Name of 2nd factor/data frame column for Barycenter / Ellipses calculation.}
+\item{Barycenter.Ellipse.Fac2}{Character. Name of 2nd factor/data frame column for Barycenter / Ellipses calculation.}
 
-\item{Ellipse.Fac.3}{Character. Name of 3rd factor/data frame column for Barycenter / Ellipses calculation.}
+\item{Barycenter.Ellipse.Fac3}{Character. Name of 3rd factor/data frame column for Barycenter / Ellipses calculation.}
 
 \item{factor.colors}{Character. Name of the factor/column considered for individuals colors.}
+
+\item{color.palette}{Vector of characters of desired colors.}
 
 \item{factor.shapes}{Character. Name of the factor/column considered for individuals shapes.}
 
 \item{factor.sizes}{Character. Name of the factor/column considered for individuals colors.}
 
+\item{factor.col.border.ellipse}{Character. Name of the factor/column considered for ellipse border colors.}
+
+\item{ellipse.line.type}{Numeric. R line type for ellipse borders.}
+
 \item{Var.circle}{TRUE or FALSE. TRUE = Display the PCA variable circle projection.}
 
 \item{Var.circle.size}{Numeric. Value for increasing the size of Var.circle graphic.}
+
+\item{Var.selected}{Character vector of selected variables for the PCA plot. Default = all variables.}
 
 \item{Var.label.size}{Numeric. Value for increasing the size of Var.circle graphic labels.}
 
@@ -100,11 +115,15 @@ PCA_RDA_graphics(
 
 \item{Heat.map.graph}{TRUE or FALSE. TRUE = Display the heat map of variable X parameter correlation to dimension.}
 
-\item{var.parameter.heat.map}{Character. Parameter selected for the heat map correlation of Variable parameter to dimensions. values : "cor", "cos2", "coor","contrib".}
+\item{var.parameter.heat.map}{Character. Parameter selected for the heat map correlation of Variable parameter to dimensions. values : "cor", "cos2", "coor","contrib". Default = "cor".}
 
 \item{Dims.heat.map}{Numeric. Numeric vector c(1,2) of dimensions considered for the variable parameter correlation.}
 
 \item{Display.cell.values.heat.map}{TRUE or FALSE. TRUE = Display the rounded value of correlations within heat map cells.}
+
+\item{width.cell.heat.map}{Numeric. Width  for Heat map cells. Default set to default pheatmap.}
+
+\item{height.cell.heat.map}{Numeric. Width  for Heat map cells. Default set to default pheatmap.}
 
 \item{Cluster.col.heat.map}{TRUE or FALSE. TRUE = cluster heatmap columns / dimensions.}
 
@@ -115,6 +134,8 @@ PCA_RDA_graphics(
 \item{RDA.table.graph}{TRUE or FALSE. TRUE = Display the RDA outputs table under PCA graphics.}
 
 \item{RDA.table.graph.height}{Numeric. Set the ratio of RDA table graphic height. Defaut is set to 1.}
+
+\item{Size.RDA.table.graph}{Numeric. Set the ratio of RDA table graphic size. Defaut is set to 7.}
 }
 \value{
 Several graphics

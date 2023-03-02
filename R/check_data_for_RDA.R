@@ -44,11 +44,11 @@ check_data_for_RDA <- function(data_quant, initial_data, factor_names){
 
       if(rda_check[1,5] < 0.05){
 
-        warning(paste("Variance-covariance matrix of ", factor_considered, " modalities are NOT homogeneous !", sep=""))
+        message(paste("Variance-covariance matrix of ", factor_considered, " modalities are NOT homogeneous ! (p.val < 0.05)", sep=""))
 
       }else if(rda_check[1,5] >= 0.05){
 
-        message(paste("Variance-covariance matrix of ", factor_considered, "modalities are homogeneous", sep=""))
+        message(paste("Variance-covariance matrix of ", factor_considered, " modalities are homogeneous (p.val >= 0.05)", sep=""))
 
       }else{NULL}
 
@@ -57,7 +57,7 @@ check_data_for_RDA <- function(data_quant, initial_data, factor_names){
 
     }else if(nb_modalities <= 1){
 
-      warning(paste("Factor: ", factor_considered ," => only one modality", sep=""))
+      message(paste("Factor: ", factor_considered ," => only one modality", sep=""))
       message(paste("Test for homogeneity only applicable to two or more groups", sep=""))
 
     }else{NULL}
@@ -76,12 +76,12 @@ check_data_for_RDA <- function(data_quant, initial_data, factor_names){
 
   if(nrow(conclusion_rda_check)==0){
 
-    message("All variance-covariance matrix of factors modalities are considered homogeneous (pval > 0.05) => Ok for RDA")
+    message("All variance-covariance matrix of factors modalities are considered homogeneous (pval >= 0.05) => Ok for RDA")
 
   }else if (nrow(conclusion_rda_check)>0){
 
-    warning("For at least one factor, variance-covariance matrix of modalities are NOT considered homogeneous (pval < 0.05) => NOT ok for RDA")
-    message("Try to solve the problem with : data transformation, balancing dataset, removing outlier, removing involved factor")
+    message("For at least one factor, variance-covariance matrix of modalities are NOT considered homogeneous (pval < 0.05) => NOT ok for RDA")
+    message("Try to solve the problem through: data transformation, balancing dataset, removing outlier, removing involved factor")
 
   }else{NULL}
 
