@@ -24,6 +24,7 @@ PCA_RDA_graphics(
   Segment.line.size,
   Segment.line.col,
   Ellipse.IC.95,
+  Ellipse.transparency,
   Barycenter.Ellipse.Fac1,
   Barycenter.Ellipse.Fac2,
   Barycenter.Ellipse.Fac3,
@@ -49,6 +50,7 @@ PCA_RDA_graphics(
   width.PCA.ind.graph,
   width.PCA.var.graph,
   width.heat.map.graph,
+  Spacing.HM.circle,
   Heat.map.graph,
   Type.heat.map.graph,
   var.parameter.heat.map,
@@ -69,13 +71,13 @@ PCA_RDA_graphics(
 )
 }
 \arguments{
-\item{complete.data.set}{Original complete data set used for the PCA, with quantitative and qualitative/factor columns}
+\item{complete.data.set}{Original complete data set used for the PCA, with quantitative and qualitative/factor columns.}
 
-\item{factor.names}{Character vector of considered factor variables of PCA}
+\item{factor.names}{Character vector of considered factor variables of PCA.}
 
 \item{sample.column}{Numeric or name (character) of the individual sample column. Default is data frame row names.}
 
-\item{PCA.object}{The PCA object, built from package FactoMineR. PCA.object <- FactoMineR::PCA(mtcars_quant, scale.unit = T, ncp = 5, graph = F)}
+\item{PCA.object}{The PCA object, built from package FactoMineR. PCA.object <- FactoMineR::PCA(mtcars_quant, scale.unit = T, ncp = 5, graph = F).}
 
 \item{Var.quanti.supp}{Character vector of column name of supplementary quantitative variables for PCA.}
 
@@ -89,17 +91,19 @@ PCA_RDA_graphics(
 
 \item{Segments}{TRUE or FALSE. TRUE : Display the linking segments between individuals and barycenters.}
 
-\item{Barycenter.min.size}{Numeric. Minimum size of barycenter point projections. Ignore if Barycenter = FALSE}
+\item{Barycenter.min.size}{Numeric. Minimum size of barycenter point projections. Ignore if Barycenter = FALSE.}
 
 \item{Ind.min.size}{Numeric. Minimum size of individuals point projections.}
 
-\item{Segment.line.type}{Numeric. Type of segment lines (see ggplot2 line type). Ignore if Segments = FALSE}
+\item{Segment.line.type}{Numeric. Type of segment lines (see ggplot2 line type). Ignore if Segments = FALSE.}
 
-\item{Segment.line.size}{Numeric. Minimum size of segment lines. Ignore if Segments = FALSE}
+\item{Segment.line.size}{Numeric. Minimum size of segment lines. Ignore if Segments = FALSE.}
 
-\item{Segment.line.col}{Character. Set the color of segments. Default = azure4}
+\item{Segment.line.col}{Character. Set the color of segments. Default = azure4.}
 
 \item{Ellipse.IC.95}{TRUE or FALSE. TRUE : Calculate and Display the Ellipse (95\% mean confidence intervals) of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.}
+
+\item{Ellipse.transparency}{Set the transparency level of the ellipse, ranging from 0 to 1. Default is 0.1.}
 
 \item{Barycenter.Ellipse.Fac1}{Character. Name of 1st factor/data frame column for Barycenter / Ellipses calculation.}
 
@@ -135,13 +139,13 @@ PCA_RDA_graphics(
 
 \item{Var.label.repel}{TRUE or FALSE. For PCA variables graphic, force variable labels to repel.}
 
-\item{col.arrow.var.PCA}{Character. Set the color of arrows for PCA variable plot. Default = gray20}
+\item{col.arrow.var.PCA}{Character. Set the color of arrows for PCA variable plot. Default = gray20.}
 
-\item{col.text.var.PCA}{Character. Set the color of text for PCA variable plot. Default = gray20}
+\item{col.text.var.PCA}{Character. Set the color of text for PCA variable plot. Default = gray20.}
 
-\item{col.arrow.var.supp.PCA}{Character. Set the color of arrows and text for PCA supplementary variable plot. Default = cadetblue}
+\item{col.arrow.var.supp.PCA}{Character. Set the color of arrows and text for PCA supplementary variable plot. Default = cadetblue.}
 
-\item{col.circle.var.PCA}{Character. Set the color of the PCA variable circle. Default = gray20}
+\item{col.circle.var.PCA}{Character. Set the color of the PCA variable circle. Default = gray20.}
 
 \item{Biplot.PCA}{TRUE or FALSE. TRUE = Biplot of PCA individuals and variables graphics. Default is set to FALSE.}
 
@@ -150,6 +154,8 @@ PCA_RDA_graphics(
 \item{width.PCA.var.graph}{Numeric. Width ratio for PCA variables graphic.}
 
 \item{width.heat.map.graph}{Numeric. Width ratio for Heat map variables graphic.}
+
+\item{Spacing.HM.circle}{Numeric. Width ratio for spacing x axis of circle heat map variables graphic. Default is 0.06.}
 
 \item{Heat.map.graph}{TRUE or FALSE. TRUE = Display the heat map of variable X parameter correlation to dimension.}
 
@@ -165,7 +171,7 @@ PCA_RDA_graphics(
 
 \item{Top.var.heat.map.Dim.b}{Numeric. Number of variables to plot in heat maps and PCA variable projection for Dim b. Default = all.}
 
-\item{Multi.dim.combination}{TRUE or FALSE. TRUE = display 10 plots of PCA ind and variables dims combination (1,2 ; 1,3...)}
+\item{Multi.dim.combination}{TRUE or FALSE. TRUE = display 10 plots of PCA ind and variables dims combination (1,2 ; 1,3...).}
 
 \item{width.cell.heat.map}{Numeric. Width  for Heat map cells. Default set to default pheat.map.}
 
@@ -175,7 +181,7 @@ PCA_RDA_graphics(
 
 \item{Cluster.row.heat.map}{TRUE or FALSE. TRUE = cluster heat.map rows / quantitative variables.}
 
-\item{RDA.object}{The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F)}
+\item{RDA.object}{The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F).}
 
 \item{RDA.table.graph}{TRUE or FALSE. TRUE = Display the RDA outputs table under PCA graphics.}
 
@@ -183,7 +189,7 @@ PCA_RDA_graphics(
 
 \item{Size.RDA.table.graph}{Numeric. Set the ratio of RDA table graphic size. Default is set to 7.}
 
-\item{Get.generated.data.frame}{TRUE or FALSE. TRUE = save the generated data frames for graphic constructions. Default = FALSE}
+\item{Get.generated.data.frame}{TRUE or FALSE. TRUE = save the generated data frames for graphic constructions. Default = FALSE.}
 }
 \value{
 Several graphics

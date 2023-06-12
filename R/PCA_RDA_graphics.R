@@ -3,23 +3,24 @@
 #' Individuals and variables graphics are possible. With or without variable cor, cos, contrib.. correlation to dimensions.
 #' RDA outputs are displayable as table under graphics.
 #'
-#' @param complete.data.set Original complete data set used for the PCA, with quantitative and qualitative/factor columns
-#' @param factor.names Character vector of considered factor variables of PCA
+#' @param complete.data.set Original complete data set used for the PCA, with quantitative and qualitative/factor columns.
+#' @param factor.names Character vector of considered factor variables of PCA.
 #' @param sample.column Numeric or name (character) of the individual sample column. Default is data frame row names.
-#' @param PCA.object The PCA object, built from package FactoMineR. PCA.object <- FactoMineR::PCA(mtcars_quant, scale.unit = T, ncp = 5, graph = F)
+#' @param PCA.object The PCA object, built from package FactoMineR. PCA.object <- FactoMineR::PCA(mtcars_quant, scale.unit = T, ncp = 5, graph = F).
 #' @param Var.quanti.supp Character vector of column name of supplementary quantitative variables for PCA.
 #' @param Display.quanti.supp TRUE or FALSE. Display supplementary quantitative variable on PCA var and Heat map graphs.
 #' @param Dim.a Numeric value (1 ; 2 ...) of the first PCA dimension selected for graphic outputs.
 #' @param Dim.b Numeric value (1 ; 2 ...) of the first PCA dimension selected for graphic outputs.
-#' @param Multi.dim.combination TRUE or FALSE. TRUE = display 10 plots of PCA ind and variables dims combination (1,2 ; 1,3...)
+#' @param Multi.dim.combination TRUE or FALSE. TRUE = display 10 plots of PCA ind and variables dims combination (1,2 ; 1,3...).
 #' @param Barycenter TRUE or FALSE. TRUE : Calculate and Display the barycenter of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.
 #' @param Segments TRUE or FALSE. TRUE : Display the linking segments between individuals and barycenters.
-#' @param Barycenter.min.size Numeric. Minimum size of barycenter point projections. Ignore if Barycenter = FALSE
+#' @param Barycenter.min.size Numeric. Minimum size of barycenter point projections. Ignore if Barycenter = FALSE.
 #' @param Ind.min.size Numeric. Minimum size of individuals point projections.
-#' @param Segment.line.type Numeric. Type of segment lines (see ggplot2 line type). Ignore if Segments = FALSE
-#' @param Segment.line.size Numeric. Minimum size of segment lines. Ignore if Segments = FALSE
-#' @param Segment.line.col Character. Set the color of segments. Default = azure4
+#' @param Segment.line.type Numeric. Type of segment lines (see ggplot2 line type). Ignore if Segments = FALSE.
+#' @param Segment.line.size Numeric. Minimum size of segment lines. Ignore if Segments = FALSE.
+#' @param Segment.line.col Character. Set the color of segments. Default = azure4.
 #' @param Ellipse.IC.95 TRUE or FALSE. TRUE : Calculate and Display the Ellipse (95% mean confidence intervals) of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.
+#' @param Ellipse.transparency Set the transparency level of the ellipse, ranging from 0 to 1. Default is 0.1.
 #' @param Barycenter.Ellipse.Fac1 Character. Name of 1st factor/data frame column for Barycenter / Ellipses calculation.
 #' @param Barycenter.Ellipse.Fac2 Character. Name of 2nd factor/data frame column for Barycenter / Ellipses calculation.
 #' @param Barycenter.Ellipse.Fac3 Character. Name of 3rd factor/data frame column for Barycenter / Ellipses calculation.
@@ -37,14 +38,15 @@
 #' @param Var.label.size Numeric. Value for increasing the size of Var.circle graphic labels.
 #' @param Var.label.repel TRUE or FALSE. For PCA variables graphic, force variable labels to repel.
 #' @param Var.selected Character vector of selected variables for the PCA plot. Default = all variables.
-#' @param col.arrow.var.PCA Character. Set the color of arrows for PCA variable plot. Default = gray20
-#' @param col.arrow.var.supp.PCA Character. Set the color of arrows and text for PCA supplementary variable plot. Default = cadetblue
-#' @param col.text.var.PCA Character. Set the color of text for PCA variable plot. Default = gray20
-#' @param col.circle.var.PCA Character. Set the color of the PCA variable circle. Default = gray20
+#' @param col.arrow.var.PCA Character. Set the color of arrows for PCA variable plot. Default = gray20.
+#' @param col.arrow.var.supp.PCA Character. Set the color of arrows and text for PCA supplementary variable plot. Default = cadetblue.
+#' @param col.text.var.PCA Character. Set the color of text for PCA variable plot. Default = gray20.
+#' @param col.circle.var.PCA Character. Set the color of the PCA variable circle. Default = gray20.
 #' @param Biplot.PCA TRUE or FALSE. TRUE = Biplot of PCA individuals and variables graphics. Default is set to FALSE.
 #' @param width.PCA.ind.graph Numeric. Width ratio for PCA individuals graphic.
 #' @param width.PCA.var.graph Numeric. Width ratio for PCA variables graphic.
 #' @param width.heat.map.graph Numeric. Width ratio for Heat map variables graphic.
+#' @param Spacing.HM.circle Numeric. Width ratio for spacing x axis of circle heat map variables graphic. Default is 0.06.
 #' @param Heat.map.graph TRUE or FALSE. TRUE = Display the heat map of variable X parameter correlation to dimension.
 #' @param Type.heat.map.graph Character. Define the type of heat map to display : "square" or "circle". Default = "square".
 #' @param var.parameter.heat.map Character. Parameter selected for the heat map correlation of Variable parameter to dimensions. values : "cor", "cos2", "coor","contrib". Default = "cor".
@@ -56,11 +58,11 @@
 #' @param height.cell.heat.map Numeric. Width  for Heat map cells. Default set to default pheat.map.
 #' @param Cluster.col.heat.map TRUE or FALSE. TRUE = cluster heat.map columns / dimensions.
 #' @param Cluster.row.heat.map TRUE or FALSE. TRUE = cluster heat.map rows / quantitative variables.
-#' @param RDA.object The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F)
+#' @param RDA.object The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F).
 #' @param RDA.table.graph TRUE or FALSE. TRUE = Display the RDA outputs table under PCA graphics.
 #' @param Size.RDA.table.graph Numeric. Set the ratio of RDA table graphic size. Default is set to 7.
 #' @param RDA.table.graph.height Numeric. Set the ratio of RDA table graphic height. Default is set to 1.
-#' @param Get.generated.data.frame TRUE or FALSE. TRUE = save the generated data frames for graphic constructions. Default = FALSE
+#' @param Get.generated.data.frame TRUE or FALSE. TRUE = save the generated data frames for graphic constructions. Default = FALSE.
 #'
 #' @return Several graphics
 #' @export
@@ -76,13 +78,13 @@
 PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
                              PCA.object, Var.quanti.supp, Display.quanti.supp, Dim.a, Dim.b, Barycenter, Segments,
                              Barycenter.min.size, Ind.min.size, Segment.line.type, Segment.line.size,Segment.line.col,
-                             Ellipse.IC.95, Barycenter.Ellipse.Fac1, Barycenter.Ellipse.Fac2, Barycenter.Ellipse.Fac3,
+                             Ellipse.IC.95, Ellipse.transparency, Barycenter.Ellipse.Fac1, Barycenter.Ellipse.Fac2, Barycenter.Ellipse.Fac3,
                              factor.colors, color.palette, factor.shapes, factor.sizes,
                              Barycenter.factor.col, Barycenter.factor.size, Barycenter.factor.shape,
                              factor.col.border.ellipse, ellipse.line.type,
                              Var.circle, Var.circle.size, Var.selected, Var.label.size, Var.label.repel,
                              col.arrow.var.PCA, col.text.var.PCA, col.arrow.var.supp.PCA, col.circle.var.PCA, Biplot.PCA,
-                             width.PCA.ind.graph, width.PCA.var.graph, width.heat.map.graph,
+                             width.PCA.ind.graph, width.PCA.var.graph, width.heat.map.graph, Spacing.HM.circle,
                              Heat.map.graph,Type.heat.map.graph, var.parameter.heat.map, Dims.heat.map, Display.cell.values.heat.map,
                              Top.var.heat.map.Dim.a, Top.var.heat.map.Dim.b,Multi.dim.combination,
                              width.cell.heat.map, height.cell.heat.map,Cluster.col.heat.map, Cluster.row.heat.map,
@@ -93,6 +95,18 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
   #Define default parameters
+  if(missing(Spacing.HM.circle)){
+
+    Spacing.HM.circle <- 0.06
+
+  }
+
+  if(missing(Ellipse.transparency)){
+
+    Ellipse.transparency <- 0.1
+
+  }
+
   if(missing(Get.generated.data.frame)){
 
     Get.generated.data.frame <- FALSE
@@ -342,13 +356,21 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   #Get columns number of factors
   colnumber <- which(names(complete.data.set)%in%factor.names)
+  nbfactors <- length(factor.names)
+
+
+  #force factors
+  for (i in unique(colnumber)){
+
+    complete.data.set[,i] <- as.factor(complete.data.set[,i])
+
+  }
+
 
   #Extract coords for individuals and variables
   data_ind_ACP <- cbind(data.frame(cbind(PCA.object$ind$coord[,c(1:5)])), complete.data.set[,c(colnumber)])
 
-
   nbnames.post.dims <- as.numeric(length(names(data_ind_ACP)))
-  names(data_ind_ACP)[6:nbnames.post.dims] <- factor.names
 
   data_var_ACP <- cbind(data.frame(cbind(PCA.object$var$coord[,c(1:5)])))
 
@@ -361,7 +383,6 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     data_var_ACP <- rbind(data_var_ACP, quantisup)
 
   }
-
 
   #Define considered "factor columns" as factors
 
@@ -392,6 +413,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   #Variables names
   data_var_ACP$Var.names <- rownames(data_var_ACP)
   Var.names_column <- which(names(data_var_ACP)%in%"Var.names")
+
 
 
   #Barycenter calculation
@@ -588,6 +610,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }else{NULL}
 
+
   #Arguments for plot
   #Individuals
   data_ind_ACP$IPZ <- 2
@@ -766,6 +789,9 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
   #IND colors and shape default parameters
+  FC <-"dummy.void"
+  FC10 <-"dummy.void"
+
   if(factor.colors==FALSE){
 
     data_ind_ACP$f.colors <- "one.col"
@@ -778,7 +804,6 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }
 
-  FC <- which(names(data_ind_ACP)%in%"f.colors")
 
   if(factor.shapes==FALSE){
 
@@ -1207,6 +1232,21 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }
 
+  #choose dims
+  if(missing(Dims.heat.map)==TRUE){
+
+    Dims.heat.map <- c(1,2)
+
+  }else if(missing(Dims.heat.map)==FALSE){
+
+    Dims.heat.map <- Dims.heat.map
+
+  }
+
+  DVC2$dimi <- DVC2$Dims
+  DVC2$dimi <- gsub("Dim.","", DVC2$dimi)
+
+  DVC2 <- DVC2[DVC2$dimi %in% Dims.heat.map,]
 
   minxpos <- min(DVC2[,xposition_col])
   maxxpos <- max(DVC2[,xposition_col])
@@ -1230,7 +1270,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     ggplot2::ylab("")+
     ggplot2::xlab("")+
     ggplot2::ggtitle(paste("Variable ", textvar, " to dims", sep=""))+
-    ggplot2::scale_x_discrete(expand = c(0.06,0.1))
+    ggplot2::scale_x_discrete(expand = c(Spacing.HM.circle,0.1))
 
   Circle_heatmap_var_graph <<- Circle_heatmap_var_graph
 
@@ -1238,6 +1278,21 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   #Dummy objects, to be overwrite
   Vcol <- "void"
+
+  #Force factors
+
+  #Get columns number of factors
+  colnumber2 <- which(names(barycentre_ind)%in%factor.names)
+  nbfactors <- length(factor.names)
+
+
+  #force factors
+  for (i in unique(colnumber)){
+
+    complete.data.set[,i] <- as.factor(complete.data.set[,i])
+
+  }
+
 
   #Individuals PCA Plot
 
@@ -1316,8 +1371,8 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   colnumber_dimb5 <- paste(Dimb, "_b", sep="")
   Dimb51 <- which(names(bie_bary)%in%colnumber_dimb5)
 
-
-
+  #Ellipse transparency factor
+  etf <- Ellipse.transparency
 
   #Graphics : individuals PCA
   PCA_ind_graphic <- ggplot2::ggplot()+
@@ -1328,7 +1383,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
     PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                    a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                   angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=0.1, data=bie)
+                                                                   angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
 
   }else if(Ellipse.IC.95==TRUE){
 
@@ -1338,25 +1393,25 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
         PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                                 a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=0.1, data=bie, size=0.1, linetype=ELT)
+                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
 
 
     }else if(factor.col.border.ellipse==FALSE){
 
     PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                              a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                             angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=0.1, data=bie, size=0.1, linetype=ELT)
+                                                                             angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
 
     }
   }
 
   if(factor.colors==FALSE){
-    data_ind_ACP[,FC] <- "black"
+    data_ind_ACP[,FC10] <- "black"
   }
 
 
-    PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
-    ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, fill=NA, colour="black")
+    PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
+    ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, fill=NA, colour="black")
 
 
     if(Barycenter.factor.shape!="void"){
@@ -1388,14 +1443,14 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     if(Barycenter.factor.size!="void" & factor.sizes==FALSE){
 
       PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend)+
-        ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=1)))
+        ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))
 
     }
 
     if(Barycenter.factor.size=="void" & factor.sizes==FALSE){
 
     PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend)+
-    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=1)))+
+    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
     ggplot2::scale_size_identity()+ggplot2::guides(size = "none")
 
     }
@@ -1403,7 +1458,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     if(factor.sizes!=F){
 
     PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend, size=factor.sizes.legend)+
-    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=1)))+
+    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
     ggplot2::scale_size_identity()
 
     }
@@ -1659,7 +1714,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
       Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                               a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                              angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=0.1, data=bie)
+                                                                              angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
 
     }else if(Ellipse.IC.95==TRUE){
 
@@ -1669,26 +1724,26 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                                 a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=0.1, data=bie, size=0.1, linetype=ELT)
+                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
 
 
       }else if(factor.col.border.ellipse==FALSE){
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                                 a = (bie[,facteur_IC95.1_column]), b = (bie[,facteur_IC95.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=0.1, data=bie, size=0.1, linetype=ELT)
+                                                                                angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
 
       }
     }
 
     if(factor.colors==FALSE){
-      data_ind_ACP[,FC] <- "black"
+      data_ind_ACP[,FC10] <- "black"
     }
 
 
-    Biplot_PCA <- Biplot_PCA + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
-      ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, fill=NA, colour="black")+
-      ggplot2::geom_point(ggplot2::aes(x=barycentre[,Dima5], y=barycentre[,Dimb5], fill=barycentre[,BCZfill_column], size=barycentre[,BCZ_column]), colour="black", shape=23, data = barycentre,show.legend = F)+
+    Biplot_PCA <- Biplot_PCA + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
+      ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, fill=NA, colour="black")+
+      ggplot2::geom_point(ggplot2::aes(x=bie_bary[,Dima51], y=bie_bary[,Dimb51], fill=bie_bary[,BCZfill_column], size=bie_bary[,BCZ_column]), colour="black", shape=23, data = bie_bary,show.legend = F)+
       ggplot2::scale_shape_manual(values = vector_shapes)
 
 

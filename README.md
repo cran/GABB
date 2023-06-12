@@ -59,16 +59,16 @@ library(FactoMineR)
 my.PCA <- FactoMineR::PCA(X = data_quant, scale.unit = F, ncp = 5, graph = F) 
 
 #Create, display and save graphics of PCA individual and variable projections.
-PCA_RDA_graphics(data = my.data, factor.names = c("vs", "am", "gear"), 
+PCA_RDA_graphics(complete.data.set = my.data, factor.names = c("vs", "am", "gear"), 
                  PCA.object = my.PCA, Dim.a = 1, Dim.b = 2,
                  Barycenter = T, Segments = T, Barycenter.min.size = 2, Ind.min.size = 1,
-                 Segment.line.type = 2,Segment.line.size = 0.1,
-                 Ellipse.IC.95 = T, Ellipse.Fac.1 = "vs", Ellipse.Fac.2 = "am",
+                 Segment.line.type = 2, Segment.line.size = 0.1,
+                 Ellipse.IC.95 = T, Barycenter.Ellipse.Fac1 = "vs", Barycenter.Ellipse.Fac2 = "am",
                  factor.colors = "vs", factor.shapes = "am",
                  Var.circle = T, Var.circle.size = 2, Var.label.size = 5,
-                 Overlaying.graphs = F, width.PCA.ind.graph = 0.6, width.PCA.var.graph = 0.4, 
-                 Heat.map.graph = T, width.heat.map.graph = 0.3,var.parameter.heat.map = "cor",
-                 Dims.heat.map = c(1,2),Display.cell.values.heat.map = T,Cluster.col.heat.map = T,Cluster.row.heat.map = T,
+                 Biplot.PCA = F, width.PCA.ind.graph = 0.6, width.PCA.var.graph = 0.4, 
+                 Heat.map.graph = T, width.heat.map.graph = 0.3, var.parameter.heat.map = "cor",
+                 Dims.heat.map = c(1,2),Display.cell.values.heat.map = T, Cluster.col.heat.map = T, Cluster.row.heat.map = T,
                  RDA.table.graph = T,RDA.table.graph.height = 0.3 )
   
 ``` 
