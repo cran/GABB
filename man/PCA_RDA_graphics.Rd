@@ -23,7 +23,10 @@ PCA_RDA_graphics(
   Segment.line.type,
   Segment.line.size,
   Segment.line.col,
-  Ellipse.IC.95,
+  Ellipse.IC,
+  IC.x,
+  Ellipse.sd,
+  sd.x,
   Ellipse.transparency,
   Barycenter.Ellipse.Fac1,
   Barycenter.Ellipse.Fac2,
@@ -101,7 +104,13 @@ PCA_RDA_graphics(
 
 \item{Segment.line.col}{Character. Set the color of segments. Default = azure4.}
 
-\item{Ellipse.IC.95}{TRUE or FALSE. TRUE : Calculate and Display the Ellipse (95\% mean confidence intervals) of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3.}
+\item{Ellipse.IC}{TRUE or FALSE. TRUE : Calculate and Display Ellipse of mean confidence interval of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3. Default is 95\% mean confidence interval.}
+
+\item{IC.x}{0 to 100. Set the value of mean confidence interval of Ellipse.IC parameter. Default is 95.}
+
+\item{Ellipse.sd}{TRUE or FALSE. TRUE : Calculate and Display Ellipse of mean standard deviation of individuals for Barycenter.Ellipse.Fac1 and/or .2 and/or .3. Default is 95\% mean confidence interval.}
+
+\item{sd.x}{Numeric. Set the value of the multiplication factor of sd (x*sd) for Ellipse.sd parameter. Default is 1.}
 
 \item{Ellipse.transparency}{Set the transparency level of the ellipse, ranging from 0 to 1. Default is 0.1.}
 
