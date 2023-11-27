@@ -4,7 +4,7 @@
 #' RDA outputs are displayable as table under graphics.
 #'
 #' @param complete.data.set Original complete data set used for the PCA, with quantitative and qualitative/factor columns.
-#' @param factor.names Character vector of considered factor variables of PCA.
+#' @param factor.names Character vector regrouping names of considered factor variables of PCA.
 #' @param sample.column Numeric or name (character) of the individual sample column. Default is data frame row names.
 #' @param PCA.object The PCA object, built from package FactoMineR. PCA.object <- FactoMineR::PCA(mtcars_quant, scale.unit = T, ncp = 5, graph = F).
 #' @param Var.quanti.supp Character vector of column name of supplementary quantitative variables for PCA.
@@ -98,7 +98,13 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
   #Define default parameters
-  if(missing(Spacing.HM.circle)){
+  if(missing(factor.names)){
+
+    factor.names <- names(complete.data.set)[1]
+
+  }
+
+    if(missing(Spacing.HM.circle)){
 
     Spacing.HM.circle <- 0.06
 

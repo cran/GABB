@@ -4,12 +4,15 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of GABB package is to help the casual R users to perform and synthesize RDA and PCA analyses, from data set preparation to graphic visualization.
-Ppackage GABB do not "re invent the wheel". Main inputs must be RDA and PCA objetcs created with vegan and FactoMiner respective packages.
-For RDA : the package GABB goal is to check of data conformity for RDA and the facilitate the displaying/saving of RDA outputs.
-For PCA : the package GABB goal is to facilitate and enhance the PCA graphic construction and display of individual/variable projections.
-Graphics relies on ggplot2, ggplotify, ggforce and ggpubr packages. 
-Created GABB plots are saved as grob/ggplot objects, so, users can modify them with classic ggplot2 options.
+The GABB package is designed to assist casual R users in conducting and synthesizing RDA (Redundancy Analysis) and PCA (Principal Component Analysis) analyses. This encompasses everything from preparing datasets to generating visualizations.
+
+GABB does not attempt to 'reinvent the wheel.' It requires main inputs to be RDA and PCA objects, which should be created using the 'vegan' and 'FactoMineR' packages, respectively.
+
+For RDA, GABB aims to verify data conformity with RDA requirements and to simplify the process of displaying and saving RDA outputs.
+
+For PCA, the package focuses on streamlining and enhancing the graphical representation of PCA, particularly in the projection of individuals and variables.
+
+Graphical outputs are based on the 'ggplot2', 'ggplotify', 'ggforce', and 'ggpubr' packages. Plots created with GABB are saved as 'grob' or 'ggplot' objects, allowing users to further customize them using standard 'ggplot2' functions.
 
 ## Installation
 
@@ -40,7 +43,7 @@ prep_data(data = my.data, quantitative_columns = c(1:7), transform_data_method =
 
 check_data_for_RDA(data_quant = data_quant,initial_data = my.data,factor_names = c("vs", "am", "gear", "carb"))
 # => the data set factor carb not suited for RDA analysis
-# Rough simple solution : not considering it
+# Simple solution : not considering it
 
 check_data_for_RDA(data_quant = data_quant,initial_data = my.data,factor_names = c("vs", "am", "gear"))
 #Check passed. Go for RDA.
@@ -50,7 +53,7 @@ library(vegan)
 my.RDA <- vegan::rda(data_quant~vs+am+gear, data=my.data)
 
 #Display and save RDA outputs
-RDA_outputs_synthesis(RDA = my.RDA, MVAsynth = T, MVAanova = F, RDATable = T)
+#' RDA_outputs_synthesis(RDA = my.RDA, RDA.synth = TRUE, RDA.anova = TRUE, RDA.Table = TRUE)
 # => the factor gear is not significant for the model residual variance modulations.
 # For the following graphic displays, it will be considered as low importance factor.
 

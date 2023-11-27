@@ -76,7 +76,7 @@ PCA_RDA_graphics(
 \arguments{
 \item{complete.data.set}{Original complete data set used for the PCA, with quantitative and qualitative/factor columns.}
 
-\item{factor.names}{Character vector of considered factor variables of PCA.}
+\item{factor.names}{Character vector regrouping names of considered factor variables of PCA.}
 
 \item{sample.column}{Numeric or name (character) of the individual sample column. Default is data frame row names.}
 
