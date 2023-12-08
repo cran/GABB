@@ -16,7 +16,7 @@
 #'
 #' library(vegan)
 #' my.RDA <- vegan::rda(mtcars[,1:7]~vs+am+gear, data=mtcars)
-#' RDA_outputs_synthesis(RDA = my.RDA, RDA.synth = TRUE, RDA.anova = TRUE, RDA.Table = TRUE)
+#' RDA_outputs_synthesis(RDA = my.RDA, RDA.synth = TRUE, RDA.anova = FALSE, RDA.Table = TRUE)
 #'
 #'
 #'
@@ -80,6 +80,8 @@ RDA_outputs_synthesis <- function(RDA, RDA.synth, RDA.anova, nbperms, RDA.Table)
 
   if(RDA.Table==TRUE){
 
+    variance_terms <- vegan::anova.cca(RDA, permutations = nbperms, by="term")
+
     message("Calculation of variance % associated with each RDA factor, considering unconstrained total variance")
     Table_RDA <- as.data.frame(variance_terms)
     Table_RDA$Unconstrained.var.percent <- round((100*Table_RDA$Variance)/(sum(Table_RDA$Variance)),2)
@@ -100,6 +102,7 @@ RDA_outputs_synthesis <- function(RDA, RDA.synth, RDA.anova, nbperms, RDA.Table)
     Table_RDA[,4] <- round(Table_RDA[,4], 5)
 
     names(Table_RDA)[3] <- "F.val"
+
 
     anovaattr <- attr(variance_terms, "heading")
     message(anovaattr)

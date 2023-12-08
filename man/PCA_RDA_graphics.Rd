@@ -67,6 +67,7 @@ PCA_RDA_graphics(
   Cluster.col.heat.map,
   Cluster.row.heat.map,
   RDA.object,
+  nbperms,
   RDA.table.graph,
   RDA.table.graph.height,
   Size.RDA.table.graph,
@@ -191,6 +192,8 @@ PCA_RDA_graphics(
 \item{Cluster.row.heat.map}{TRUE or FALSE. TRUE = cluster heat.map rows / quantitative variables.}
 
 \item{RDA.object}{The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F).}
+
+\item{nbperms}{Numeric number of permutations used by the RDA.anova function. Default is 1000.}
 
 \item{RDA.table.graph}{TRUE or FALSE. TRUE = Display the RDA outputs table under PCA graphics.}
 

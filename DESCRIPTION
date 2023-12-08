@@ -1,7 +1,7 @@
 Package: GABB
 Title: Facilitation of Data Preparation and Plotting Procedures for RDA
         and PCA Analyses
-Version: 0.3.5
+Version: 0.3.7
 Authors@R: 
     person("Gregoire", "Bianchetti", , "auguste.blam@gmail.com", role = c("aut", "cre"))
 Description: Help to the occasional R user for synthesis and enhanced graphical visualization of redundancy analysis (RDA) and principal component analysis (PCA) methods and objects.
@@ -14,11 +14,10 @@ Language: en
 Suggests: FactoMineR, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: dplyr, egg (>= 0.4.5), ggforce, ggplot2, ggrepel, ggplotify,
-        ggpubr, tidyr, Hotelling, pheatmap, RVAideMemoire, stats,
-        vegan, utils
+        ggpubr, tidyr, Hotelling, pheatmap, stats, vegan, utils
 NeedsCompilation: no
-Packaged: 2023-11-27 08:39:08 UTC; Gregoire-Bianchetti
+Packaged: 2023-12-06 10:53:49 UTC; Gregoire-Bianchetti
 Author: Gregoire Bianchetti [aut, cre]
 Maintainer: Gregoire Bianchetti <auguste.blam@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-11-27 09:00:06 UTC
+Date/Publication: 2023-12-08 17:50:03 UTC

@@ -27,7 +27,7 @@ This function facilitate output analysis of vegan package RDA.
 
 library(vegan)
 my.RDA <- vegan::rda(mtcars[,1:7]~vs+am+gear, data=mtcars)
-RDA_outputs_synthesis(RDA = my.RDA, RDA.synth = TRUE, RDA.anova = TRUE, RDA.Table = TRUE)
+RDA_outputs_synthesis(RDA = my.RDA, RDA.synth = TRUE, RDA.anova = FALSE, RDA.Table = TRUE)
 
 
 

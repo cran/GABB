@@ -62,6 +62,7 @@
 #' @param Cluster.col.heat.map TRUE or FALSE. TRUE = cluster heat.map columns / dimensions.
 #' @param Cluster.row.heat.map TRUE or FALSE. TRUE = cluster heat.map rows / quantitative variables.
 #' @param RDA.object The RDA object, built from package vegan. RDA.object <- vegan::rda(mtcars_quant, scale.unit = T, ncp = 5, graph = F).
+#' @param nbperms Numeric number of permutations used by the RDA.anova function. Default is 1000.
 #' @param RDA.table.graph TRUE or FALSE. TRUE = Display the RDA outputs table under PCA graphics.
 #' @param Size.RDA.table.graph Numeric. Set the ratio of RDA table graphic size. Default is set to 7.
 #' @param RDA.table.graph.height Numeric. Set the ratio of RDA table graphic height. Default is set to 1.
@@ -91,20 +92,26 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
                              Heat.map.graph,Type.heat.map.graph, var.parameter.heat.map, Dims.heat.map, Display.cell.values.heat.map,
                              Top.var.heat.map.Dim.a, Top.var.heat.map.Dim.b,Multi.dim.combination,
                              width.cell.heat.map, height.cell.heat.map,Cluster.col.heat.map, Cluster.row.heat.map,
-                             RDA.object, RDA.table.graph, RDA.table.graph.height,Size.RDA.table.graph, Get.generated.data.frame){
+                             RDA.object, nbperms, RDA.table.graph, RDA.table.graph.height,Size.RDA.table.graph, Get.generated.data.frame){
 
 
 
 
 
   #Define default parameters
+  if(missing(nbperms)){
+
+    nbperms <- 1000
+
+  }
+
   if(missing(factor.names)){
 
     factor.names <- names(complete.data.set)[1]
 
   }
 
-    if(missing(Spacing.HM.circle)){
+  if(missing(Spacing.HM.circle)){
 
     Spacing.HM.circle <- 0.06
 
@@ -122,7 +129,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }
 
-    if(missing(Barycenter.factor.col)){
+  if(missing(Barycenter.factor.col)){
 
     Barycenter.factor.col <- "void"
 
@@ -264,13 +271,13 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     factor.sizes <- FALSE
 
   }
-    if(missing(factor.shapes)){
+  if(missing(factor.shapes)){
 
     factor.shapes <- FALSE
 
   }
 
-    if(missing(factor.colors)){
+  if(missing(factor.colors)){
 
     factor.colors <- FALSE
 
@@ -460,46 +467,46 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     min_comb <- as.numeric(min(summary(data_ind_ACP[,F1])))
     max_comb <- as.numeric(max(summary(data_ind_ACP[,F1])))
 
-      barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = mean)
-      names(barycentre1)[ncol(barycentre1)] <- Dima
+    barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = mean)
+    names(barycentre1)[ncol(barycentre1)] <- Dima
 
-      barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = mean)
-      names(barycentre2)[ncol(barycentre2)] <- Dimb
+    barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = mean)
+    names(barycentre2)[ncol(barycentre2)] <- Dimb
 
-      barycentre<-dplyr::inner_join(barycentre1, barycentre2)
-      names(barycentre)[1] <- Barycenter.Ellipse.Fac1
-      names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
-      barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
+    barycentre<-dplyr::inner_join(barycentre1, barycentre2)
+    names(barycentre)[1] <- Barycenter.Ellipse.Fac1
+    names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
+    barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
 
-      #Calcul de l'intervalle de confiance x%
-      ICx_sd <- stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[2] <- "sd.1"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    #Calcul de l'intervalle de confiance x%
+    ICx_sd <- stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[2] <- "sd.1"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = length) ; names(ICx_n)[2] <- "nb.1"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = length) ; names(ICx_n)[2] <- "nb.1"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
 
-      ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[2] <- "sd.2"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[2] <- "sd.2"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = length) ; names(ICx_n)[2] <- "nb.2"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1], data = data_ind_ACP, FUN = length) ; names(ICx_n)[2] <- "nb.2"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
 
-      ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
 
-      #calculate the table factor
-      table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
-      title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
-      title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
+    #calculate the table factor
+    table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
+    title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
+    title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
 
-      barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
-      barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
+    barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
+    barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
 
-      if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
+    if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
 
       barycentre_ind$facteur_ICx.1 <- (sd.x*barycentre_ind$sd.1)
       barycentre_ind$facteur_ICx.2 <- (sd.x*barycentre_ind$sd.2)
@@ -507,18 +514,18 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
       title.information <- as.character(paste("(ellipses:", sd.x, sep=""))
       title.information <- as.character(paste(title.information, "x mean SD)", sep=""))
 
-      }else{NULL}
+    }else{NULL}
 
 
-      dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
+    dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
 
-      if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
+    if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
 
-        message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
+      message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
 
-      }
+    }
 
-      barycentre_ind[is.na(barycentre_ind)] <- 0
+    barycentre_ind[is.na(barycentre_ind)] <- 0
 
   }else if(missing(Barycenter.Ellipse.Fac2)==FALSE & missing(Barycenter.Ellipse.Fac3)==TRUE){
 
@@ -530,72 +537,72 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     min_comb <- as.numeric(min(summary(data_ind_ACP[,ncol(data_ind_ACP)])))
     max_comb <- as.numeric(max(summary(data_ind_ACP[,ncol(data_ind_ACP)])))
 
-      barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = mean)
-      names(barycentre1)[ncol(barycentre1)] <- Dima
+    barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = mean)
+    names(barycentre1)[ncol(barycentre1)] <- Dima
 
-      barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = mean)
-      names(barycentre2)[ncol(barycentre2)] <- Dimb
+    barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = mean)
+    names(barycentre2)[ncol(barycentre2)] <- Dimb
 
-      barycentre<-dplyr::inner_join(barycentre1, barycentre2)
-      names(barycentre)[1] <- Barycenter.Ellipse.Fac1
-      names(barycentre)[2] <- Barycenter.Ellipse.Fac2
+    barycentre<-dplyr::inner_join(barycentre1, barycentre2)
+    names(barycentre)[1] <- Barycenter.Ellipse.Fac1
+    names(barycentre)[2] <- Barycenter.Ellipse.Fac2
 
-      names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
-      barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
+    names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
+    barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
 
-      #Calcul de l'intervalle de confiance x%
-      ICx_sd <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[3] <- "sd.1"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
+    #Calcul de l'intervalle de confiance x%
+    ICx_sd <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[3] <- "sd.1"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = length) ; names(ICx_n)[3] <- "nb.1"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = length) ; names(ICx_n)[3] <- "nb.1"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
 
-      ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[3] <- "sd.2"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
+    ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[3] <- "sd.2"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = length) ; names(ICx_n)[3] <- "nb.2"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
-      ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2], data = data_ind_ACP, FUN = length) ; names(ICx_n)[3] <- "nb.2"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
+    ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
 
-      #calculate the table factor
-      table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
-      title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
-      title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
+    #calculate the table factor
+    table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
+    title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
+    title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
 
-      barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
-      barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
-
-
-      if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
-
-        barycentre_ind$facteur_ICx.1 <- (sd.x*barycentre_ind$sd.1)
-        barycentre_ind$facteur_ICx.2 <- (sd.x*barycentre_ind$sd.2)
-
-        title.information <- as.character(paste("(ellipses:", sd.x, sep=""))
-        title.information <- as.character(paste(title.information, "x mean SD)", sep=""))
-
-      }else{NULL}
+    barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
+    barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
 
 
+    if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
 
-      dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
+      barycentre_ind$facteur_ICx.1 <- (sd.x*barycentre_ind$sd.1)
+      barycentre_ind$facteur_ICx.2 <- (sd.x*barycentre_ind$sd.2)
 
-      if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
+      title.information <- as.character(paste("(ellipses:", sd.x, sep=""))
+      title.information <- as.character(paste(title.information, "x mean SD)", sep=""))
 
-        message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
+    }else{NULL}
 
-      }
 
-      barycentre_ind[is.na(barycentre_ind)] <- 0
+
+    dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
+
+    if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
+
+      message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
+
+    }
+
+    barycentre_ind[is.na(barycentre_ind)] <- 0
 
 
   }else if(missing(Barycenter.Ellipse.Fac2)==FALSE & missing(Barycenter.Ellipse.Fac3)==FALSE){
@@ -609,77 +616,77 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     min_comb <- as.numeric(min(summary(data_ind_ACP[,ncol(data_ind_ACP)])))
     max_comb <- as.numeric(max(summary(data_ind_ACP[,ncol(data_ind_ACP)])))
 
-      barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = mean)
-      names(barycentre1)[ncol(barycentre1)] <- Dima
+    barycentre1<-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = mean)
+    names(barycentre1)[ncol(barycentre1)] <- Dima
 
-      barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = mean)
-      names(barycentre2)[ncol(barycentre2)] <- Dimb
+    barycentre2<-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = mean)
+    names(barycentre2)[ncol(barycentre2)] <- Dimb
 
-      barycentre<-dplyr::inner_join(barycentre1, barycentre2)
-      names(barycentre)[1] <- Barycenter.Ellipse.Fac1
-      names(barycentre)[2] <- Barycenter.Ellipse.Fac2
-      names(barycentre)[3] <- Barycenter.Ellipse.Fac3
+    barycentre<-dplyr::inner_join(barycentre1, barycentre2)
+    names(barycentre)[1] <- Barycenter.Ellipse.Fac1
+    names(barycentre)[2] <- Barycenter.Ellipse.Fac2
+    names(barycentre)[3] <- Barycenter.Ellipse.Fac3
 
-      names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
-      barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
+    names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))]<-paste(names(barycentre)[c((ncol(barycentre)-1):ncol(barycentre))], "b", sep="_") #Numero des colonnes
+    barycentre_ind<-dplyr::left_join(data_ind_ACP, barycentre)
 
-      #Calcul de l'intervalle de confiance x%
-      ICx_sd <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[4] <- "sd.1"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
-      names(ICx_sd)[3] <- Barycenter.Ellipse.Fac3
+    #Calcul de l'intervalle de confiance x%
+    ICx_sd <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[4] <- "sd.1"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
+    names(ICx_sd)[3] <- Barycenter.Ellipse.Fac3
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = length) ; names(ICx_n)[4] <- "nb.1"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
-      names(ICx_n)[3] <- Barycenter.Ellipse.Fac3
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dima2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = length) ; names(ICx_n)[4] <- "nb.1"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
+    names(ICx_n)[3] <- Barycenter.Ellipse.Fac3
 
-      ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_1 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[4] <- "sd.2"
-      names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
-      names(ICx_sd)[3] <- Barycenter.Ellipse.Fac3
+    ICx_sd <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = stats::sd) ; names(ICx_sd)[4] <- "sd.2"
+    names(ICx_sd)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_sd)[2] <- Barycenter.Ellipse.Fac2
+    names(ICx_sd)[3] <- Barycenter.Ellipse.Fac3
 
-      ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = length) ; names(ICx_n)[4] <- "nb.2"
-      names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
-      names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
-      names(ICx_n)[3] <- Barycenter.Ellipse.Fac3
+    ICx_n <-stats::aggregate(data_ind_ACP[,Dimb2]~data_ind_ACP[,F1]+data_ind_ACP[,F2]+data_ind_ACP[,F3], data = data_ind_ACP, FUN = length) ; names(ICx_n)[4] <- "nb.2"
+    names(ICx_n)[1] <- Barycenter.Ellipse.Fac1
+    names(ICx_n)[2] <- Barycenter.Ellipse.Fac2
+    names(ICx_n)[3] <- Barycenter.Ellipse.Fac3
 
-      ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
+    ICx_2 <- dplyr::inner_join(ICx_sd,ICx_n)
 
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
-      barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_1)
+    barycentre_ind<-dplyr::inner_join(barycentre_ind, ICx_2)
 
-      #calculate the table factor
-      table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
-      title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
-      title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
+    #calculate the table factor
+    table.factor <- as.numeric(stats::qnorm((1+(IC.x/100))/2))
+    title.information <- as.character(paste("(ellipses:", IC.x, sep=""))
+    title.information <- as.character(paste(title.information, "% mean CI)", sep=""))
 
-      barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
-      barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
+    barycentre_ind$facteur_ICx.1 <- ((table.factor*barycentre_ind$sd.1)/sqrt(barycentre_ind$nb.1))
+    barycentre_ind$facteur_ICx.2 <- ((table.factor*barycentre_ind$sd.2)/sqrt(barycentre_ind$nb.2))
 
-      if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
+    if(Ellipse.sd == TRUE & Ellipse.IC == FALSE){
 
-        barycentre_ind$facteur_ICx.1 <- (sd.x*barycentre_ind$sd.1)
-        barycentre_ind$facteur_ICx.2 <- (sd.x*barycentre_ind$sd.2)
+      barycentre_ind$facteur_ICx.1 <- (sd.x*barycentre_ind$sd.1)
+      barycentre_ind$facteur_ICx.2 <- (sd.x*barycentre_ind$sd.2)
 
-        title.information <- as.character(paste("(ellipses:", sd.x, sep=""))
-        title.information <- as.character(paste(title.information, "x mean SD)", sep=""))
+      title.information <- as.character(paste("(ellipses:", sd.x, sep=""))
+      title.information <- as.character(paste(title.information, "x mean SD)", sep=""))
 
-      }else{NULL}
+    }else{NULL}
 
 
 
-      dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
+    dataellipse <- barycentre_ind[is.na(barycentre_ind$sd.1),]
 
-      if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
+    if(Ellipse.sd==TRUE & nrow(dataellipse)>0 | Ellipse.IC==TRUE & nrow(dataellipse)>0){
 
-        message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
+      message(paste(as.numeric(nrow(dataellipse)), " factor or factor combination without ellipse because only 1 individual / modality", sep=""))
 
-      }
+    }
 
-      barycentre_ind[is.na(barycentre_ind)] <- 0
+    barycentre_ind[is.na(barycentre_ind)] <- 0
 
   }else{NULL}
 
@@ -922,7 +929,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }else if(missing(width.PCA.ind.graph)==FALSE){
 
-  WidthIG <- width.PCA.ind.graph
+    WidthIG <- width.PCA.ind.graph
 
   }
 
@@ -973,62 +980,73 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   }else if(is.RDA.object==TRUE){
 
-  Table_RDA <- as.data.frame(RVAideMemoire::MVA.anova(RDA.object))
+    summary_output <- utils::capture.output(summary(RDA.object))
+    variance_partitioning_lines <- suppressWarnings(summary_output[grep("Proportion", summary_output):grep("Unconstrained", summary_output)])
 
-  Table_RDA$Unconstrained.var.percent <- round((100*Table_RDA$Variance)/(sum(Table_RDA$Variance)),2)
+    # Nettoyer et transformer les données en dataframe
+    variance_data <- do.call(rbind, strsplit(variance_partitioning_lines, "\\s+"))
+    variance_df <- as.data.frame(variance_data)
+    colnames(variance_df) <- c("Component", "Inertia", "Proportion")
+    variance_df <- variance_df[-c(1),]
 
-  Table_RDA$Sign.p.val <- NA
+    # Convertir les colonnes Inertia et Proportion en numérique
+    variance_df$Inertia <- as.numeric(as.character(variance_df$Inertia))
+    variance_df$Proportion <- as.numeric(as.character(variance_df$Proportion))
+    variance_df$Proportion <- variance_df$Proportion*100
 
-  Table_RDA <<- Table_RDA
+    variance_terms <- vegan::anova.cca(RDA.object, permutations = nbperms, by="term")
 
-  #Check if RDA table is ok (if not, probable model issue)
+    Table_RDA <- as.data.frame(variance_terms)
+    Table_RDA$Unconstrained.var.percent <- round((100*Table_RDA$Variance)/(sum(Table_RDA$Variance)),2)
+    Table_RDA$Sign.p.val <- NA
 
-  nb_table_cells <- as.numeric(dim(Table_RDA)[1]*dim(Table_RDA)[2])
-  nb_table_na <- as.numeric(sum(is.na(Table_RDA)))
-  nb_diff_table_cells_table_na <- as.numeric(nb_table_cells-nb_table_na)
+    #Check if RDA table is ok (if not, probable model issue)
 
-  if(nb_diff_table_cells_table_na >= 0){
+    nb_table_cells <- as.numeric(dim(Table_RDA)[1]*dim(Table_RDA)[2])
+    nb_table_na <- as.numeric(sum(is.na(Table_RDA)))
+    nb_diff_table_cells_table_na <- as.numeric(nb_table_cells-nb_table_na)
 
-    RDA.table.graph <- FALSE
-    message("The RDA table cannot be generated due to possible reasons such as low variation in factor interactions, strong collinearity, and insufficient samples.")
-    message("To resolve this issue, consider reducing the number of factors in the RDA model and/or checking the validity of the RDA model.")
+    if(nb_diff_table_cells_table_na <= 0){
 
-  }else if(nb_diff_table_cells_table_na < 0){
+      RDA.table.graph <- FALSE
+      message("The RDA table cannot be generated due to possible reasons such as low variation in factor interactions, strong collinearity, and insufficient samples.")
+      message("To resolve this issue, consider reducing the number of factors in the RDA model and/or checking the validity of the RDA model.")
 
-  for (i in 1:(nrow(Table_RDA)-1)){
+    }else if(nb_diff_table_cells_table_na > 0){
 
-    if (Table_RDA[i,4] <= 0.001){Table_RDA[i,6] <- "***"}
-    else if(Table_RDA[i,4] < 0.01 & Table_RDA[i,4] > 0.001){Table_RDA[i,6] <- "**"}
-    else if(Table_RDA[i,4]<0.05 & Table_RDA[i,4] >= 0.01){Table_RDA[i,6] <- "*"}
-    else if(Table_RDA[i,4]>0.05){Table_RDA[i,6] <- "ns"}
-    else{NULL}
+      for (i in 1:(nrow(Table_RDA)-1)){
+
+        if (Table_RDA[i,4] <= 0.001){Table_RDA[i,6] <- "***"}
+        else if(Table_RDA[i,4] < 0.01 & Table_RDA[i,4] > 0.001){Table_RDA[i,6] <- "**"}
+        else if(Table_RDA[i,4]<0.05 & Table_RDA[i,4] >= 0.01){Table_RDA[i,6] <- "*"}
+        else if(Table_RDA[i,4]>0.05){Table_RDA[i,6] <- "ns"}
+        else{NULL}
+
+      }
 
 
-  }
+      Table_RDA[,c(2,3,5)] <- sapply(Table_RDA[,c(2,3,5)], FUN = function(x) round(x,2))
+      Table_RDA[,4] <- round(Table_RDA[,4], 5)
 
-  names(Table_RDA)[3] <- "F.val"
-  names(Table_RDA)[5] <- paste("Unconstr.", "Var(%)", sep="\n")
-  names(Table_RDA)[6] <- paste("Sign", "p.val", sep="\n")
+      names(Table_RDA)[2] <- "Var"
+      names(Table_RDA)[3] <- "F.val"
+      names(Table_RDA)[5] <- paste("Unconstr.", "Var(%)", sep="\n")
+      names(Table_RDA)[6] <- paste("Sign", "p.val", sep="\n")
 
-  Table_RDA$Variance <- round(Table_RDA$Variance,2)
-  names(Table_RDA)[2] <- "Var"
+      Table_RDA$Factor <- rownames(Table_RDA)
+      Table_RDA$Factor <- gsub("Residual", "residuals", Table_RDA$Factor)
 
-  Table_RDA$F.val <- round(Table_RDA$F.val,2)
+      text.subtitle <- paste("Model: ", as.character(RDA.object$call)[2], sep="")
 
-  Table_RDA$Factor <- rownames(Table_RDA)
-  Table_RDA$Factor <- gsub("Residual", "residuals", Table_RDA$Factor)
+      tab <- ggpubr::ggtexttable(Table_RDA, theme = ggpubr::ttheme("light", base_size = Size.RDA.table.graph), rows=NULL)
+      tab <- ggpubr::tab_add_title(tab, text = "Redundancy analysis", face="bold")
+      tab <- ggpubr::table_cell_font(tab, column = c(3,4,6),row = (nrow(Table_RDA)+2),
+                                     face="italic", color="darkgrey", size=8)
 
-  text.subtitle <- paste("Model: ", as.character(RDA.object$call)[2], sep="")
-
-  tab <- ggpubr::ggtexttable(Table_RDA, theme = ggpubr::ttheme("light", base_size = Size.RDA.table.graph), rows=NULL)
-  tab <- ggpubr::tab_add_title(tab, text = "Redundancy analysis", face="bold")
-  tab <- ggpubr::table_cell_font(tab, column = c(3,4,6),row = (nrow(Table_RDA)+2),
-                                 face="italic", color="darkgrey", size=8)
-
-  tab <- ggpubr::tab_add_border(tab)
-  tab <- ggpubr::tab_add_footnote(tab, text=text.subtitle, face="italic", size=8)
-  Table_RDA_graph <- tab
-  Table_RDA_graph <<- Table_RDA_graph
+      tab <- ggpubr::tab_add_border(tab)
+      tab <- ggpubr::tab_add_footnote(tab, text=text.subtitle, face="italic", size=8)
+      Table_RDA_graph <- tab
+      Table_RDA_graph <<- Table_RDA_graph
 
     }
   }
@@ -1064,36 +1082,36 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
     if(is.character(Var.quanti.supp)==TRUE & Display.quanti.supp==TRUE){
 
-          if(var.parameter.heat.map=="coord"){
+      if(var.parameter.heat.map=="coord"){
 
-            matrixHM0 <- as.data.frame(PCA.object[[5]][1])
-            names(matrixHM0) <- gsub("coord.","",names(matrixHM0))
-            gng0 <- "ok"
+        matrixHM0 <- as.data.frame(PCA.object[[5]][1])
+        names(matrixHM0) <- gsub("coord.","",names(matrixHM0))
+        gng0 <- "ok"
 
-          }else if(var.parameter.heat.map=="cor"){
+      }else if(var.parameter.heat.map=="cor"){
 
-            matrixHM0 <- as.data.frame(PCA.object[[5]][2])
-            names(matrixHM0) <- gsub("cor.","",names(matrixHM0))
-            gng0 <- "ok"
+        matrixHM0 <- as.data.frame(PCA.object[[5]][2])
+        names(matrixHM0) <- gsub("cor.","",names(matrixHM0))
+        gng0 <- "ok"
 
-          }else if(var.parameter.heat.map=="cos2"){
+      }else if(var.parameter.heat.map=="cos2"){
 
-            matrixHM0 <- as.data.frame(PCA.object[[5]][3])
-            names(matrixHM0) <- gsub("cos2.","",names(matrixHM0))
-            gng0 <- "ok"
+        matrixHM0 <- as.data.frame(PCA.object[[5]][3])
+        names(matrixHM0) <- gsub("cos2.","",names(matrixHM0))
+        gng0 <- "ok"
 
-          }else if(var.parameter.heat.map=="contrib"){
+      }else if(var.parameter.heat.map=="contrib"){
 
-            matrixHM0 <- as.data.frame(PCA.object[[2]][4])
-            matrixHM0 <- as.data.frame(matrixHM0[1,])
-            gng0 <- "not.ok"
-            message("Variable contribution to dims: no display of supplementary quantitative variables")
+        matrixHM0 <- as.data.frame(PCA.object[[2]][4])
+        matrixHM0 <- as.data.frame(matrixHM0[1,])
+        gng0 <- "not.ok"
+        message("Variable contribution to dims: no display of supplementary quantitative variables")
 
-          }else if (var.parameter.heat.map != "coord" | var.parameter.heat.map != "cor" |var.parameter.heat.map != "cos2" |var.parameter.heat.map != "contrib"){
+      }else if (var.parameter.heat.map != "coord" | var.parameter.heat.map != "cor" |var.parameter.heat.map != "cos2" |var.parameter.heat.map != "contrib"){
 
-            gng <- "nook"
+        gng <- "nook"
 
-          }else {NULL}
+      }else {NULL}
 
     }
 
@@ -1165,12 +1183,12 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
       if(is.character(Var.quanti.supp)==TRUE & Display.quanti.supp==TRUE){
 
-      matrixHM$Var.names <- rownames(matrixHM)
-      matrixHM0$Var.names <- rownames(matrixHM0)
+        matrixHM$Var.names <- rownames(matrixHM)
+        matrixHM0$Var.names <- rownames(matrixHM0)
 
-      matrixHM <- dplyr::full_join(matrixHM,matrixHM0)
-      rownames(matrixHM) <- matrixHM$Var.names
-      matrixHM <- matrixHM[,-c(ncol(matrixHM))]
+        matrixHM <- dplyr::full_join(matrixHM,matrixHM0)
+        rownames(matrixHM) <- matrixHM$Var.names
+        matrixHM <- matrixHM[,-c(ncol(matrixHM))]
 
       }
 
@@ -1289,80 +1307,80 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   if(Heat.map.graph==TRUE & Type.heat.map.graph=="circle"){
 
-  #heatmap with circles
-  #dumy void object
-  Dims <- "void"
-  Val <- "void"
+    #heatmap with circles
+    #dumy void object
+    Dims <- "void"
+    Val <- "void"
 
-  DVC <- matrixHM
-  DVC$Var.names <- rownames(matrixHM)
+    DVC <- matrixHM
+    DVC$Var.names <- rownames(matrixHM)
 
-  DVC$yposition <- c(1:nrow(DVC))
+    DVC$yposition <- c(1:nrow(DVC))
 
-  DVC2 <- tidyr::gather(DVC, key = Dims,value = Val, 1:(ncol(DVC)-2))
+    DVC2 <- tidyr::gather(DVC, key = Dims,value = Val, 1:(ncol(DVC)-2))
 
-  DVC2$xposition <- 0
-  xposition_col <-  as.numeric(which(names(DVC2)%in%"xposition"))
-  dims_col <-  as.numeric(which(names(DVC2)%in%"Dims"))
+    DVC2$xposition <- 0
+    xposition_col <-  as.numeric(which(names(DVC2)%in%"xposition"))
+    dims_col <-  as.numeric(which(names(DVC2)%in%"Dims"))
 
-  for (i in 2:nrow(DVC2)){
+    for (i in 2:nrow(DVC2)){
 
-    DVC2[1,xposition_col] <- 1
+      DVC2[1,xposition_col] <- 1
 
-    if(DVC2[i,dims_col]!=DVC2[(i-1),dims_col]){
+      if(DVC2[i,dims_col]!=DVC2[(i-1),dims_col]){
 
-      DVC2[i,xposition_col] <- DVC2[(i-1),xposition_col]+1
+        DVC2[i,xposition_col] <- DVC2[(i-1),xposition_col]+1
 
-    }else if(DVC2[i,dims_col]==DVC2[(i-1),dims_col]){
+      }else if(DVC2[i,dims_col]==DVC2[(i-1),dims_col]){
 
-      DVC2[i,xposition_col] <- DVC2[(i-1),xposition_col]
+        DVC2[i,xposition_col] <- DVC2[(i-1),xposition_col]
 
-    }else{NULL}
-
-
-  }
-
-  #choose dims
-  if(missing(Dims.heat.map)==TRUE){
-
-    Dims.heat.map <- c(1,2)
-
-  }else if(missing(Dims.heat.map)==FALSE){
-
-    Dims.heat.map <- Dims.heat.map
-
-  }
-
-  DVC2$dimi <- DVC2$Dims
-  DVC2$dimi <- gsub("Dim.","", DVC2$dimi)
-
-  DVC2 <- DVC2[DVC2$dimi %in% Dims.heat.map,]
-
-  minxpos <- min(DVC2[,xposition_col])
-  maxxpos <- max(DVC2[,xposition_col])
-
-  Circle.dims <- which(names(DVC2)%in%"Dims")
-  Circle.Val <- which(names(DVC2)%in%"Val")
-  Circle.Var.names <- which(names(DVC2)%in%"Var.names")
-  Circle.yposition <- which(names(DVC2)%in%"yposition")
+      }else{NULL}
 
 
-  Circle_heatmap_var_graph <- ggplot2::ggplot()+
-    ggplot2::geom_point(data=DVC2 , ggplot2::aes(y=DVC2[,Circle.Var.names], x=DVC2[,Circle.dims],
-                                       size=abs(DVC2[,Circle.Val]), fill=DVC2[,Circle.Val]),
-                        shape=21)+
-    ggplot2::scale_fill_gradient2(low = "blue3",mid = "white" ,high = "brown1",midpoint = 0, limits=c(-1,1))+
-    ggplot2::geom_segment(data=DVC2, ggplot2::aes(x=minxpos, xend=maxxpos, y=DVC2[,Circle.yposition], yend=DVC2[,Circle.yposition]),
-                          color="grey", linewidth=0.1, linetype=3)+
-    ggplot2::theme_light()+ggplot2::theme(panel.grid = ggplot2::element_blank())+
-    ggplot2::guides(fill=ggplot2::guide_colourbar("Value"))+
-    ggplot2::guides(size=ggplot2::guide_legend("abs(Value)"))+
-    ggplot2::ylab("")+
-    ggplot2::xlab("")+
-    ggplot2::ggtitle(paste("Variable ", textvar, " to dims", sep=""))+
-    ggplot2::scale_x_discrete(expand = c(Spacing.HM.circle,0.1))
+    }
 
-  Circle_heatmap_var_graph <<- Circle_heatmap_var_graph
+    #choose dims
+    if(missing(Dims.heat.map)==TRUE){
+
+      Dims.heat.map <- c(1,2)
+
+    }else if(missing(Dims.heat.map)==FALSE){
+
+      Dims.heat.map <- Dims.heat.map
+
+    }
+
+    DVC2$dimi <- DVC2$Dims
+    DVC2$dimi <- gsub("Dim.","", DVC2$dimi)
+
+    DVC2 <- DVC2[DVC2$dimi %in% Dims.heat.map,]
+
+    minxpos <- min(DVC2[,xposition_col])
+    maxxpos <- max(DVC2[,xposition_col])
+
+    Circle.dims <- which(names(DVC2)%in%"Dims")
+    Circle.Val <- which(names(DVC2)%in%"Val")
+    Circle.Var.names <- which(names(DVC2)%in%"Var.names")
+    Circle.yposition <- which(names(DVC2)%in%"yposition")
+
+
+    Circle_heatmap_var_graph <- ggplot2::ggplot()+
+      ggplot2::geom_point(data=DVC2 , ggplot2::aes(y=DVC2[,Circle.Var.names], x=DVC2[,Circle.dims],
+                                                   size=abs(DVC2[,Circle.Val]), fill=DVC2[,Circle.Val]),
+                          shape=21)+
+      ggplot2::scale_fill_gradient2(low = "blue3",mid = "white" ,high = "brown1",midpoint = 0, limits=c(-1,1))+
+      ggplot2::geom_segment(data=DVC2, ggplot2::aes(x=minxpos, xend=maxxpos, y=DVC2[,Circle.yposition], yend=DVC2[,Circle.yposition]),
+                            color="grey", linewidth=0.1, linetype=3)+
+      ggplot2::theme_light()+ggplot2::theme(panel.grid = ggplot2::element_blank())+
+      ggplot2::guides(fill=ggplot2::guide_colourbar("Value"))+
+      ggplot2::guides(size=ggplot2::guide_legend("abs(Value)"))+
+      ggplot2::ylab("")+
+      ggplot2::xlab("")+
+      ggplot2::ggtitle(paste("Variable ", textvar, " to dims", sep=""))+
+      ggplot2::scale_x_discrete(expand = c(Spacing.HM.circle,0.1))
+
+    Circle_heatmap_var_graph <<- Circle_heatmap_var_graph
 
   }
 
@@ -1472,8 +1490,8 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   if(Ellipse.IC==FALSE & Ellipse.sd == FALSE){
 
     PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                   a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                   angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
+                                                                            a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                            angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
 
   }else if(Ellipse.IC==TRUE | Ellipse.sd == TRUE){
 
@@ -1481,16 +1499,16 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     if(factor.col.border.ellipse!=FALSE){
 
 
-        PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                                a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
+      PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
+                                                                              a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                              angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
 
 
     }else if(factor.col.border.ellipse==FALSE){
 
-    PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                             a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                             angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
+      PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
+                                                                              a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                              angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
 
     }
   }
@@ -1500,81 +1518,81 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   }
 
 
-    PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
+  PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, alpha=1)+
     ggplot2::geom_point(ggplot2::aes(x=data_ind_ACP[,Dima2], y=data_ind_ACP[,Dimb2], fill=data_ind_ACP[,FC10], shape=data_ind_ACP[,FS], size=data_ind_ACP[,IPZ_column]), data=data_ind_ACP, fill=NA, colour="black")
 
 
-    if(Barycenter.factor.shape!="void"){
+  if(Barycenter.factor.shape!="void"){
 
     PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=bie_bary[,Dima51], y=bie_bary[,Dimb51], fill=bie_bary[,BCZfill_column], size=bie_bary[,BCZ_column], shape=bie_bary[,BCShp_column]),
                                                              colour="black", data = bie_bary,show.legend = F)+
       ggplot2::scale_shape_manual(values=c(21:25))
 
 
-    }else if(Barycenter.factor.shape=="void"){
+  }else if(Barycenter.factor.shape=="void"){
 
     PCA_ind_graphic <- PCA_ind_graphic + ggplot2::geom_point(ggplot2::aes(x=bie_bary[,Dima51], y=bie_bary[,Dimb51], fill=bie_bary[,BCZfill_column], size=bie_bary[,BCZ_column]),
                                                              colour="black", shape=23, data = bie_bary,show.legend = F)+
       ggplot2::scale_shape_manual(values = vector_shapes)
 
-    }
+  }
 
-    if(Barycenter.factor.size!="void"){
+  if(Barycenter.factor.size!="void"){
 
-      PCA_ind_graphic <- PCA_ind_graphic+
+    PCA_ind_graphic <- PCA_ind_graphic+
       ggplot2::scale_size_identity(name=as.character(Barycenter.factor.size),
                                    breaks=bie_bary[,BCZ_column],
                                    labels=bie_bary[,bary_size], guide="legend")
 
 
 
-    }
+  }
 
-    if(Barycenter.factor.size!="void" & factor.sizes==FALSE){
-
-      PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend)+
-        ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))
-
-    }
-
-    if(Barycenter.factor.size=="void" & factor.sizes==FALSE){
+  if(Barycenter.factor.size!="void" & factor.sizes==FALSE){
 
     PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend)+
-    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
-    ggplot2::scale_size_identity()+ggplot2::guides(size = "none")
+      ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))
 
-    }
+  }
 
-    if(factor.sizes!=F){
+  if(Barycenter.factor.size=="void" & factor.sizes==FALSE){
+
+    PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend)+
+      ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
+      ggplot2::scale_size_identity()+ggplot2::guides(size = "none")
+
+  }
+
+  if(factor.sizes!=F){
 
     PCA_ind_graphic <- PCA_ind_graphic+ggplot2::labs(fill=factor.colors.legend, shape=factor.shapes.legend, size=factor.sizes.legend)+
-    ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
-    ggplot2::scale_size_identity()
+      ggplot2::guides(fill=ggplot2::guide_legend(override.aes = list(shape=21)))+
+      ggplot2::scale_size_identity()
 
-    }
+  }
 
-    if(factor.colors==FALSE){
+  if(factor.colors==FALSE){
 
-      PCA_ind_graphic <- PCA_ind_graphic+ggplot2::guides(fill = "none")
+    PCA_ind_graphic <- PCA_ind_graphic+ggplot2::guides(fill = "none")
 
-    }else if(factor.colors!=FALSE){
+  }else if(factor.colors!=FALSE){
 
-      PCA_ind_graphic <- PCA_ind_graphic
+    PCA_ind_graphic <- PCA_ind_graphic
 
-    }else{NULL}
+  }else{NULL}
 
 
-    if(factor.shapes==FALSE){
+  if(factor.shapes==FALSE){
 
-      PCA_ind_graphic <- PCA_ind_graphic+ggplot2::guides(shape = "none")
+    PCA_ind_graphic <- PCA_ind_graphic+ggplot2::guides(shape = "none")
 
-    }else if(factor.shapes!=FALSE){
+  }else if(factor.shapes!=FALSE){
 
-      PCA_ind_graphic <- PCA_ind_graphic
+    PCA_ind_graphic <- PCA_ind_graphic
 
-    }else{NULL}
+  }else{NULL}
 
-    PCA_ind_graphic <- PCA_ind_graphic+ ggplot2::ggtitle(paste("PCA : Sample projection", title.information, sep=" "))+
+  PCA_ind_graphic <- PCA_ind_graphic+ ggplot2::ggtitle(paste("PCA : Sample projection", title.information, sep=" "))+
     ggplot2::xlab(da)+
     ggplot2::ylab(db)+
 
@@ -1582,11 +1600,11 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     ggplot2::theme(strip.background =ggplot2::element_rect(fill="white"))+
     ggplot2::theme(strip.text = ggplot2::element_text(colour = 'black'))
 
-    if(is.character(color.palette)==TRUE){
+  if(is.character(color.palette)==TRUE){
 
-      PCA_ind_graphic <- PCA_ind_graphic+ggplot2::scale_fill_manual(values=color.palette)
+    PCA_ind_graphic <- PCA_ind_graphic+ggplot2::scale_fill_manual(values=color.palette)
 
-    }
+  }
 
   PCA_ind_graphic <- PCA_ind_graphic+ggplot2::coord_fixed()
   PCA_ind_graphic <<- PCA_ind_graphic
@@ -1660,22 +1678,22 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   PCA_var_graphic <- ggplot2::ggplot()+
     ggforce::geom_circle(ggplot2::aes(x0 = 0, y0 = 0, r = 1*k), color = col.circle.var.PCA, linetype = 2, alpha = 0.5)+
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = 0, xend = data_var_ACP_var[,VD1]*k, yend = data_var_ACP_var[,VD2]*k,
-                          colour = I(data_var_ACP_var[,Vcol])), data = data_var_ACP_var, arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")))
+                                       colour = I(data_var_ACP_var[,Vcol])), data = data_var_ACP_var, arrow = ggplot2::arrow(length = ggplot2::unit(0.25, "cm")))
 
 
-    if(Var.label.repel==TRUE){
+  if(Var.label.repel==TRUE){
 
 
-      PCA_var_graphic <- PCA_var_graphic+ggrepel::geom_text_repel(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k+(1/10*k)), y=data_var_ACP_var[,VD2]*(k+(1/10*k)),
-                                                             label=data_var_ACP_var[,Var.names_column], color=I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
+    PCA_var_graphic <- PCA_var_graphic+ggrepel::geom_text_repel(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k+(1/10*k)), y=data_var_ACP_var[,VD2]*(k+(1/10*k)),
+                                                                             label=data_var_ACP_var[,Var.names_column], color=I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
 
-    }else if(Var.label.repel==FALSE){
+  }else if(Var.label.repel==FALSE){
 
 
-      PCA_var_graphic <- PCA_var_graphic+ggplot2::geom_text(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k+(1/10*k)), y=data_var_ACP_var[,VD2]*(k+(1/10*k)),
-                                                             label=data_var_ACP_var[,Var.names_column], color = I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
+    PCA_var_graphic <- PCA_var_graphic+ggplot2::geom_text(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k+(1/10*k)), y=data_var_ACP_var[,VD2]*(k+(1/10*k)),
+                                                                       label=data_var_ACP_var[,Var.names_column], color = I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
 
-    }
+  }
 
 
 
@@ -1700,15 +1718,15 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   if(Get.generated.data.frame==TRUE){
 
-  Individuals_PCA_data <- data_ind_ACP
-  Variables_PCA_data <- data_var_ACP_var
-  Barycenter_PCA_data <- bie_bary
-  Segments_PCA_data <- barycentre_ind
+    Individuals_PCA_data <- data_ind_ACP
+    Variables_PCA_data <- data_var_ACP_var
+    Barycenter_PCA_data <- bie_bary
+    Segments_PCA_data <- barycentre_ind
 
-  Individuals_PCA_data <<- data_ind_ACP
-  Variables_PCA_data <<- data_var_ACP_var
-  Barycenter_PCA_data <<- bie_bary
-  Segments_PCA_data <<- barycentre_ind
+    Individuals_PCA_data <<- data_ind_ACP
+    Variables_PCA_data <<- data_var_ACP_var
+    Barycenter_PCA_data <<- bie_bary
+    Segments_PCA_data <<- barycentre_ind
 
   }
 
@@ -1776,13 +1794,13 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
       Biplot_PCA <- Biplot_PCA+ggrepel::geom_text_repel(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k2+(1/10*k2)), y=data_var_ACP_var[,VD2]*(k2+(1/10*k2)),
-                                                                               label=data_var_ACP_var[,Var.names_column], color=I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
+                                                                     label=data_var_ACP_var[,Var.names_column], color=I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
 
     }else if(Var.label.repel==FALSE){
 
 
       Biplot_PCA <- Biplot_PCA+ggplot2::geom_text(ggplot2::aes(x=data_var_ACP_var[,VD1]*(k2+(1/10*k2)), y=data_var_ACP_var[,VD2]*(k2+(1/10*k2)),
-                                                                         label=data_var_ACP_var[,Var.names_column], color = I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
+                                                               label=data_var_ACP_var[,Var.names_column], color = I(data_var_ACP_var[,Vcol.text])), size = kz, data=data_var_ACP_var)
 
     }
 
@@ -1803,8 +1821,8 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     if(Ellipse.IC==FALSE){
 
       Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                              a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                              angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
+                                                                    a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                    angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
 
     }else if(Ellipse.IC==TRUE){
 
@@ -1813,15 +1831,15 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                                a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                      a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                      angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
 
 
       }else if(factor.col.border.ellipse==FALSE){
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
-                                                                                a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                                angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                      a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
+                                                                      angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
 
       }
     }
@@ -1896,7 +1914,7 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
   if(Biplot.PCA==FALSE){
 
-     if(Heat.map.graph==FALSE & RDA.table.graph==FALSE){
+    if(Heat.map.graph==FALSE & RDA.table.graph==FALSE){
 
       Separated_PCA_ind_var <- ggpubr::ggarrange(PCA_ind_graphic,PCA_var_graphic, nrow=1, ncol=2, widths = c(WidthIG,WidthVG))
       Separated_PCA_ind_var <<- Separated_PCA_ind_var
@@ -1998,6 +2016,6 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
     }else{NULL}
 
-    }
+  }
 
 }
