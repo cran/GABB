@@ -82,7 +82,8 @@
 PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
                              PCA.object, Var.quanti.supp, Display.quanti.supp, Dim.a, Dim.b, Barycenter, Segments,
                              Barycenter.min.size, Ind.min.size, Segment.line.type, Segment.line.size,Segment.line.col,
-                             Ellipse.IC, IC.x, Ellipse.sd, sd.x,  Ellipse.transparency, Barycenter.Ellipse.Fac1, Barycenter.Ellipse.Fac2, Barycenter.Ellipse.Fac3,
+                             Ellipse.IC, IC.x, Ellipse.sd, sd.x,  Ellipse.transparency,
+                             Barycenter.Ellipse.Fac1, Barycenter.Ellipse.Fac2, Barycenter.Ellipse.Fac3,
                              factor.colors, color.palette, factor.shapes, factor.sizes,
                              Barycenter.factor.col, Barycenter.factor.size, Barycenter.factor.shape,
                              factor.col.border.ellipse, ellipse.line.type,
@@ -397,11 +398,13 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
 
   #Extract coords for individuals and variables
-  data_ind_ACP <- cbind(data.frame(cbind(PCA.object$ind$coord[,c(1:5)])), complete.data.set[,c(colnumber)])
+  nb_coords <- ncol(PCA.object$ind$coord)
+
+  data_ind_ACP <- cbind(data.frame(cbind(PCA.object$ind$coord[,c(1:nb_coords)])), complete.data.set[,c(colnumber)])
 
   nbnames.post.dims <- as.numeric(length(names(data_ind_ACP)))
 
-  data_var_ACP <- cbind(data.frame(cbind(PCA.object$var$coord[,c(1:5)])))
+  data_var_ACP <- cbind(data.frame(cbind(PCA.object$var$coord[,c(1:nb_coords)])))
 
   if(is.character(Var.quanti.supp)==TRUE){
 
@@ -901,24 +904,18 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
   vector_shapes <- c(21,22,24,25,23)
   vector_shapes <- vector_shapes[1:length(unique(data_ind_ACP[,FS]))]
 
-  d1 <- paste("Dim1 (",round(PCA.object$eig[1,2],1),"%)", sep="")
-  d2 <- paste("Dim2 (",round(PCA.object$eig[2,2],1),"%)", sep="")
-  d3 <- paste("Dim3 (",round(PCA.object$eig[3,2],1),"%)", sep="")
-  d4 <- paste("Dim4 (",round(PCA.object$eig[4,2],1),"%)", sep="")
-  d5 <- paste("Dim5 (",round(PCA.object$eig[5,2],1),"%)", sep="")
 
-  da <- ifelse(Dim.a==1, d1,
-               ifelse(Dim.a==2, d2,
-                      ifelse(Dim.a==3, d3,
-                             ifelse(Dim.a==4, d4,
-                                    ifelse(Dim.a==5, d5, NULL)))))
+  da <- ifelse(Dim.a==1, paste("Dim1 (",round(PCA.object$eig[1,2],1),"%)", sep=""),
+               ifelse(Dim.a==2, paste("Dim2 (",round(PCA.object$eig[2,2],1),"%)", sep=""),
+                      ifelse(Dim.a==3, paste("Dim3 (",round(PCA.object$eig[3,2],1),"%)", sep=""),
+                             ifelse(Dim.a==4, paste("Dim4 (",round(PCA.object$eig[4,2],1),"%)", sep=""),
+                                    ifelse(Dim.a==5, paste("Dim5 (",round(PCA.object$eig[5,2],1),"%)", sep=""), NULL)))))
 
-  db <- ifelse(Dim.b==1, d1,
-               ifelse(Dim.b==2, d2,
-                      ifelse(Dim.b==3, d3,
-                             ifelse(Dim.b==4, d4,
-                                    ifelse(Dim.b==5, d5, NULL)))))
-
+  db <- ifelse(Dim.b==1, paste("Dim1 (",round(PCA.object$eig[1,2],1),"%)", sep=""),
+               ifelse(Dim.b==2, paste("Dim2 (",round(PCA.object$eig[2,2],1),"%)", sep=""),
+                      ifelse(Dim.b==3, paste("Dim3 (",round(PCA.object$eig[3,2],1),"%)", sep=""),
+                             ifelse(Dim.b==4, paste("Dim4 (",round(PCA.object$eig[4,2],1),"%)", sep=""),
+                                    ifelse(Dim.b==5, paste("Dim5 (",round(PCA.object$eig[5,2],1),"%)", sep=""), NULL)))))
 
 
 
@@ -1705,8 +1702,8 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
     ggplot2::geom_segment(ggplot2::aes(x = -1*k, y = 0, xend = 1*k, yend = 0), color=col.circle.var.PCA, alpha=0.7)+
     ggplot2::geom_segment(ggplot2::aes(x = 0, y = -1*k, xend = 0, yend = 1*k), color=col.circle.var.PCA, alpha=0.7)+
 
-    ggplot2::xlab(d1)+
-    ggplot2::ylab(d2)
+    ggplot2::xlab(da)+
+    ggplot2::ylab(db)
 
   PCA_var_graphic <- PCA_var_graphic+ggplot2::coord_fixed()
 
@@ -1814,8 +1811,8 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
       ggplot2::geom_segment(ggplot2::aes(x = -1*k2, y = 0, xend = 1*k2, yend = 0), color=col.circle.var.PCA, alpha=0.7)+
       ggplot2::geom_segment(ggplot2::aes(x = 0, y = -1*k2, xend = 0, yend = 1*k2), color=col.circle.var.PCA, alpha=0.7)+
 
-      ggplot2::xlab(d1)+
-      ggplot2::ylab(d2)+
+      ggplot2::xlab(da)+
+      ggplot2::ylab(db)+
       ggplot2::geom_segment(ggplot2::aes(x = barycentre_ind[,Dima3], y = barycentre_ind[,Dimb3], xend = barycentre_ind[,Dima4], yend = barycentre_ind[,Dimb4]), linetype=2,linewidth=SLS, data = barycentre_ind, color = SLC)
 
     if(Ellipse.IC==FALSE){
