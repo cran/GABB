@@ -1498,14 +1498,14 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
       PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                               a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                              angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                              angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, linewidth=0.1, linetype=ELT)
 
 
     }else if(factor.col.border.ellipse==FALSE){
 
       PCA_ind_graphic <- PCA_ind_graphic + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                               a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                              angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                              angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, linewidth=0.1, linetype=ELT)
 
     }
   }
@@ -1815,13 +1815,13 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
       ggplot2::ylab(db)+
       ggplot2::geom_segment(ggplot2::aes(x = barycentre_ind[,Dima3], y = barycentre_ind[,Dimb3], xend = barycentre_ind[,Dima4], yend = barycentre_ind[,Dimb4]), linetype=2,linewidth=SLS, data = barycentre_ind, color = SLC)
 
-    if(Ellipse.IC==FALSE){
+    if(Ellipse.IC==FALSE & Ellipse.sd==FALSE){
 
       Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                     a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
                                                                     angle = 0, color=I(bie[,Ecol_column])),fill=NA, alpha=etf, data=bie)
 
-    }else if(Ellipse.IC==TRUE){
+    }else if(Ellipse.IC==TRUE | Ellipse.sd==TRUE){
 
 
       if(factor.col.border.ellipse!=FALSE){
@@ -1829,14 +1829,14 @@ PCA_RDA_graphics <- function(complete.data.set, factor.names, sample.column,
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                       a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                      angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                      angle = 0,fill=bie[,Efill_column], color=bie[,CBE_column]), alpha=etf, data=bie, linewidth=0.1, linetype=ELT)
 
 
       }else if(factor.col.border.ellipse==FALSE){
 
         Biplot_PCA <- Biplot_PCA + ggforce::geom_ellipse(ggplot2::aes(x0 = bie[,Dima4], y0 = bie[,Dimb4],
                                                                       a = (bie[,facteur_ICx.1_column]), b = (bie[,facteur_ICx.2_column]),
-                                                                      angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, size=0.1, linetype=ELT)
+                                                                      angle = 0,fill=bie[,Efill_column]), color="azure4", alpha=etf, data=bie, linewidth=0.1, linetype=ELT)
 
       }
     }

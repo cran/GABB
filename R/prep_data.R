@@ -22,7 +22,22 @@ prep_data <- function(data,
                       transform_data_method,
                       scale_data){
 
-  data_quant <- data[,quantitative_columns]
+  #Check for non variable quantitative column
+  sd_columns <- apply(data[,quantitative_columns],2,stats::sd)
+  zero_sd_columns_pos <- as.numeric(which(sd_columns==0))
+  zero_sd_columns_names <- names(sd_columns[sd_columns==0])
+
+  if(length(zero_sd_columns_names)>0){
+
+    quantitative_columns <- quantitative_columns[-zero_sd_columns_pos]
+    data_quant <- data[,quantitative_columns]
+
+    message(paste("The following columns were removed from the data quant due to 0 standard deviation (check raw data): ",
+                  zero_sd_columns_names, sep=""))
+
+  }else{data_quant <- data[,quantitative_columns]
+
+  }
 
   #Transform data
 
@@ -34,7 +49,7 @@ prep_data <- function(data,
     data_quant <- Hotelling::clr(data_quant)
   }else if (transform_data_method=="none"){
     data_quant <- data_quant
-  }else (data_quant <- data_quant)
+  }else{data_quant <- data_quant}
 
 
   #Scale data
@@ -43,7 +58,7 @@ prep_data <- function(data,
     data_quant <- scale(data_quant)
   }else if (scale_data==FALSE){
     data_quant <- data_quant
-  }else (data_quant <- scale(data_quant))
+  }else {data_quant <- scale(data_quant)}
 
   data_quant <<- as.data.frame(data_quant)
   initial_data_with_quant_transformed <- "void"
